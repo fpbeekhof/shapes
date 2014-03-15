@@ -1,0 +1,47 @@
+Description: Upstream changes introduced in version 20101115-1
+ This patch has been created by dpkg-source during the package build.
+ Here's the last changelog entry, hopefully it gives details on why
+ those changes were made:
+ .
+ shapes (20101115-1) unstable; urgency=low
+ .
+   * Initial release
+ .
+ The person named in the Author field signed this changelog entry.
+Author: Fokko Beekhof <fpbeekhof@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- shapes-20101115.orig/Makefile
++++ shapes-20101115/Makefile
+@@ -3,14 +3,16 @@
+ ##########################
+ 
+ # Install directory (used by CVMLCPP's build system)
+-TARGET=/usr/local
++#TARGET=/usr/local
++TARGET=${DESTDIR}/usr
+ 
+ # Number of jobs to launch in parallel (used by CVMLCPP's build system)
+ NCPU=2
+ 
+ # Installation directory of CVMLCPP
+-#export CVMLCPP_PREFIX=/usr/local/
+-export CVMLCPP_PREFIX=${TARGET}
++#export CVMLCPP_PREFIX=/usr/local
++#export CVMLCPP_PREFIX=${TARGET}
++export CVMLCPP_PREFIX=/usr/
+ 
+ # Comment this line out to disable the use of GNU Scientific Library
+ BACKEND=gsl

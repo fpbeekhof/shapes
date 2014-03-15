@@ -1,0 +1,29 @@
+Source: shapes
+Priority: extra
+Maintainer: Fokko Beekhof <fpbeekhof@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), cvmlcpp, cvmlcpp-dev, libgsl0-dev, scons, make, g++, libboost-iostreams-dev, zlib1g-dev
+Standards-Version: 3.8.4
+Section: libs
+Homepage: http://tech.unige.ch/shapes
+
+Package: shapes-dev
+Section: libdevel
+Architecture: any
+Depends: shapes (= ${binary:Version}), cvmlcpp, cvmlcpp-dev, libgsl0-dev, libboost-iostreams-dev
+Description:Implicit 3D Modelling - development headers
+ The Shapes package is a combination of:
+     - a mathematical model for infinitely precise smooth 3D volumes;
+     - standard to describe 3D volumes with XML files;
+     - software to convert volume-descriptions into common 3D datastructures.
+ This package contains the headers needed to use shapes as a library for development.
+
+Package: shapes
+Section: libs
+Architecture: any
+Conflicts: gerris, gerris-mpi
+Depends: ${shlibs:Depends}, ${misc:Depends}, cvmlcpp, libgsl0ldbl, libboost-iostreams-dev
+Description: Implicit 3D Modelling
+ The Shapes package is a combination of:
+     - a mathematical model for infinitely precise smooth 3D volumes;
+     - standard to describe 3D volumes with XML files;
+     - software to convert volume-descriptions into common 3D datastructures.

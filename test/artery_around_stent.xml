@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+
+<Shape>
+	<Union>
+		<Exponent>4</Exponent>
+
+		<Tube>
+			<Name>Vessel1</Name>
+			<Point>
+				<Center>0.0715 0.0538 0.0995</Center>
+				<Radius>0.002</Radius>
+			</Point>
+			<Point>
+				<Center>0.0725 0.0535 0.1030</Center>
+				<Radius>0.002</Radius>
+			</Point>
+			<Point>
+				<Center>0.0745 0.0528 0.1048</Center>
+				<Radius>0.002</Radius>
+			</Point>
+		</Tube>
+	</Union>
+</Shape>
+

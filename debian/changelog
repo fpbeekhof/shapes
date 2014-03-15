@@ -1,0 +1,19 @@
+shapes (20111109-2) unstable; urgency=low
+
+  * Recompiled against cvmlcpp-20110926
+  * Added zlib1g-dev to build dependencies
+  * Updated install files
+
+ -- Fokko Beekhof <fpbeekhof@gmail.com>  Wed, 09 Nov 2011 10:03:25 +0100
+
+shapes (20110312-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Fokko Beekhof <fpbeekhof@gmail.com>  Sat, 12 Mar 2011 13:24:51 +0100
+
+shapes (20101115-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Fokko Beekhof <fpbeekhof@gmail.com>  Sun, 21 Nov 2010 08:59:11 +0100

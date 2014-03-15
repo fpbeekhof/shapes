@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+
+<Shape>
+    <Union>
+        <Exponent>2</Exponent>
+        <Tube>
+            <Point>
+                <Center>50 50 0</Center>
+                <Radius>8</Radius>
+            </Point>
+            <Point>
+                <Center>48 50 12</Center>
+                <Radius>8</Radius>
+            </Point>
+            <Point>
+                <Center>38 50 40</Center>
+                <Radius>8</Radius>
+            </Point>
+            <Point>
+                <Center>45 50 70</Center>
+                <Radius>8</Radius>
+            </Point>
+        </Tube>
+
+        <Tube>
+            <Point>
+                <Center>45 50 70</Center>
+                <Radius>6</Radius>
+            </Point>
+            <Point>
+                <Center>70 60 72</Center>
+                <Radius>6</Radius>
+            </Point>
+            <Point>
+                <Center>75 82 78</Center>
+                <Radius>6</Radius>
+            </Point>
+            <Point>
+                <Center>55 92 90</Center>
+                <Radius>6</Radius>
+            </Point>
+        </Tube>
+
+        <Tube>
+            <Point>
+                <Center>45 50 70</Center>
+                <Radius>6</Radius>
+            </Point>
+            <Point>
+                <Center>42 85 75</Center>
+                <Radius>6</Radius>
+            </Point>
+            <Point>
+                <Center>48 100 65</Center>
+                <Radius>6</Radius>
+            </Point>
+            <Point>
+                <Center>60 105 45</Center>
+                <Radius>6</Radius>
+            </Point>
+        </Tube>
+
+        <Sphere>
+            <Weight>12 12 10</Weight>
+            <Center>47 50 84</Center>
+            <Radius>16</Radius>
+            <Orientation>
+		<RotationVector>1 0 0</RotationVector>
+		<Angle> 45 </Angle>
+            </Orientation>
+        </Sphere>
+
+    </Union>
+</Shape>

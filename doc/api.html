@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Shapes</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<link rel='stylesheet' href='stylesheet.css' type='text/css' />
+</head>
+
+<body>
+<div>
+
+<table border='0' width='100%'>
+<tbody>
+<tr>
+<td align='center'>
+<table border='0' width='1000'>
+<tbody>
+<tr>
+<td>
+
+<!-- Begin Page -->
+
+<h1>Shapes Application Programmers' Interface</h1>
+
+<!--
+<p>
+Before reading this, it is recommended to read the
+<a href='http://tech.unige.ch/shapes/doc/shapes.pdf'>Technical Report</a>.
+</p>
+-->
+
+<p>
+Programmers should include a single top-level header that offers the
+complete interface:
+</p>
+<pre>
+#include &lt;shapes/shapes.hpp&gt;
+</pre>
+
+<p>
+Shapes extensively uses 3D points and vectors from
+<a href='http://tech.unige.ch/cvmlcpp/'>CVMLCPP</a>'s
+<a href='http://tech.unige.ch/cvmlcpp/source/doc/Euclid.html'>Euclid</a>
+package. The class Shapes and Structure classes offer the following typedefs:
+</p>
+<pre>
+typedef cvmlcpp::Point3D&lt;T&gt; FPVector;
+typedef cvmlcpp::Point3D&lt;T&gt; FPPoint;
+</pre>
+
+<h2>Shapes</h2>
+
+<p>
+A Shape is the top-level entity that programmers are expected to work on.
+The Shape contains one Structure that in turn may contain other Structures. 
+Shape has the following methods:
+</p>
+<table border='1' width='100%'>
+<tbody>
+
+<tr>
+	<td><pre>  bool fromXml(TiXmlDocument &amp;doc)  </pre></td>
+	<td>Create a shape by parsing the XML-<i>doc</i>.</td>
+</tr>
+
+<tr>
+	<td><pre>  TiXmlDocument * const toXml() const  </pre></td>
+	<td>Express a Shape in an XML-document.</td>
+</tr>
+
+<tr>
+	<td><pre>  void add(Structure&lt;T&gt; * const structure)  </pre></td>
+	<td>Add a structure to the Shape. Do <b>not</b> delete <i>structure</i> yourself!!</td>
+</tr>
+
+<tr>
+	<td><pre>  void clear()  </pre></td>
+	<td>Make the Shape empty, so that it contains no Structures.</td>
+</tr>
+
+<tr>
+	<td><pre>  bool empty() const  </pre></td>
+	<td>Return true if the Shape contains no Structures.</td>
+</tr>
+
+<tr>
+	<td><pre>  void getBoundingBox(FPPoint &amp;_minCorner,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		      FPPoint &amp;_maxCorner) const  </pre></td>
+	<td>Returns a bounding box indicated by a corner containing the lowest values for the <i>X<i>, <i>Y</i> and
+	<i>Z</i> coordinates in <i>_minCorner</i> and the highest values in <i>_maxCorner</i>. If
+	no bounding box has been set, it will be estimated; be aware that the estimation is not always accurate.</td>
+</tr>
+
+<tr>
+	<td><pre>  void setBoundingBox(FPPoint &amp;_minCorner,
+		      FPPoint &amp;_maxCorner)  </pre></td>
+	<td>Manually set the bounding box indicated by the vector containing the lowest values in all
+	coordinates <i>_minCorner</i>, and the highest values in <i>_maxCorner</i>.</td>
+</tr>
+
+<tr>
+	<td><pre>  bool boundingBoxIsSet() const  </pre></td>
+	<td>Returs true if a bounding box has been manually specified by a call to <i>setBoundingBox()</i> or
+	in the XML-specification. If the returned value is false, <i>getBoundingBox()</i> is set to return an
+	estimated value.</td>
+</tr>
+
+<tr>
+	<td><pre>  void unSetBoundingBox()  </pre></td>
+	<td>Forget manually specified bounding box, if there was one. This will cause any call to
+	<i>getBoundingBox()</i> to return an estimated value if no other bounding box is set in the mean time.</td>
+</tr>
+
+<tr>
+	<td><pre>  void print() const  </pre></td>
+	<td>For debugging, prints an XML-representation of the Shape to the screen.</td>
+</tr>
+
+<tr>
+	<td><pre>  T value(const FPPoint &amp;p) const   </pre></td>
+	<td>Returns the value of the generated field at the specified point in space.</td>
+</tr>
+
+</tbody>
+</table>
+
+
+<h2>Structures</h2>
+
+<p>
+All structures offer the following interface:
+</p>
+<table border='1' width='100%'>
+<tbody>
+
+<tr>
+	<td><pre>  T value(const FPPoint &amp;p) const  </pre></td>
+	<td>Programmers should not need to call this function directly. The Shape will do that if
+	the member function <i>value()</i> of Shape is called.</td>
+</tr>
+
+<tr>
+	<td><pre>  bool fromXML(TiXmlHandle &amp;root)  </pre></td>
+	<td>Programmers should not need to call this function directly. The Shape will do that if
+	the member function <i>fromXML()</i> of Shape is called. Reads the Structure from a node in an XML-document.</td>
+</tr>
+
+<tr>
+	<td><pre>   TiXmlElement * const toXML() const  </pre></td>
+	<td>Programmers should not need to call this function directly. </td>
+</tr>
+
+<tr>
+	<td><pre>  void getBoundingBox(FPPoint &amp;_minCorner,
+		      FPPoint &amp;_maxCorner)  </pre></td>
+	<td>Programmers should not need to call this function directly. The Shape will do that if
+	the member function <i>getBoundingBox()</i> of Shape is called. Return two corners of a box in
+	3D space that is estimated to hold the Structure.</td>
+</tr>
+
+<tr>
+	<td><pre>  void print(unsigned indent = 0)  </pre></td>
+	<td>Programmers should not need to call this function directly. The Shape will do that if
+	the member function <i>print()</i> of Shape is called.
+	Prints the Structure on the standard output in XML-format.</td>
+</tr>
+
+<tr>
+	<td><pre>  void setDamping(const T dLow, const T dHigh)  </pre></td>
+	<td>Set the parameters of the damping function. Please refer to the
+	Technical Report for details.</td>
+</tr>
+
+<tr>
+	<td><pre>  void setName(const std::string new_name)  </pre></td>
+	<td>Give a new name to the structure.</td>
+</tr>
+
+<tr>
+	<td><pre>  const std::string &amp;name() const  </pre></td>
+	<td>Get the name of this structure.</td>
+</tr>
+
+<tr>
+	<td><pre>  bool empty() const  </pre></td>
+	<td>Returns true if the Structure is contains no data.</td>
+</tr>
+
+</tbody>
+</table>
+
+<h3>Sphere</h3>
+
+<table border='1' width='100%'>
+<tbody>
+
+<tr>
+	<td><pre>  Sphere(const std::string name__ = "")  </pre></td>
+	<td>Constructor, creates a Sphere with a zero radius.</td>
+</tr>
+
+<tr>
+	<td><pre>  Sphere(const FPPoint &amp;_center, const FPVector &amp;_weight,&nbsp;&nbsp;
+	 const T _radius,
+	 const FPVector &amp;_rotation_vector, const T _angle = 0.0,
+	 const T _exponent = 2.0, const std::string name__ = "")  </pre></td>
+	<td>Constructor, creates a Sphere with given parameters.
+	Note that <i>angle</i> is in radians, not degrees!</td>
+</tr>
+
+<tr>
+	<td><pre>  bool set(const FPPoint &amp;_center, 
+	   const FPVector &amp;_weight,
+	   const T _radius,
+	   const FPVector &amp;_rotation_vector, const T _angle,
+	   const T _exponent)  </pre></td>
+	<td>Change the parameters of the Sphere.
+	Note that <i>angle</i> is in radians, not degrees! Returns true on success, false when 
+	an invalid <i>weight</i> or <i>rotation_vector</i> is specified.</td>
+</tr>
+
+</tbody>
+</table>
+
+<h3>Tube</h3>
+
+<table border='1' width='100%'>
+<tbody>
+
+<tr>
+	<td><pre>  Tube(const std::string name__ = "")  </pre></td>
+	<td>Creates an empty Tube.</td>
+</tr>
+
+<tr>
+	<td><pre>  Tube(const std::vector&lt;Point&lt;T&gt; &gt; &amp;_points,
+	   const std::string name__ = "")  </pre></td>
+	<td>Creates a Tube by interpolation of the given sequence <i>_points</i>.
+	There should be at least three elements in <i>_points</i>.</td>
+</tr>
+
+<tr>
+	<td><pre>  bool set(const std::vector&lt;Point&lt;T&gt; &gt; &amp;_points, 
+	   const std::string name__ = "")  </pre></td>
+	<td>Discard the old set of interpolation points, and start using the
+	sequence <i>_points</i>.</td>
+</tr>
+
+<tr>
+	<td><pre>  const std::vector&lt;Point&lt;T&gt; &gt; &amp;getPoints() const  </pre></td>
+	<td>Return the current sequence of interpolation points.</td>
+</tr>
+
+</tbody>
+</table>
+
+<h3>Union and Intersection</h3>
+
+<table border='1' width='100%'>
+<tbody>
+
+<tr>
+	<td><pre>  Union / Intersection (const std::string name__ = "", T _exponent = 2.) </pre></td>
+	<td>Construct an empty Union or Intersection with the default exponent to control the smoothing.</td>
+</tr>
+
+<tr>
+	<td><pre> Union / Intersection (T _exponent, const std::string name__ = "")   </pre></td>
+	<td>Construct an empty Union or Intersection using the given <i>_exponent</i> to control the smoothing.</td>
+</tr>
+
+<tr>
+	<td><pre>  void add(Structure&lt;T&gt; *structure)  </pre></td>
+	<td>Add a sub-structure. Do <b>not</b> delete <i>structure</i> yourself!!</td>
+</tr>
+
+<tr>
+	<td><pre>  void clear()  </pre></td>
+	<td>Remove all sub-structures.</td>
+</tr>
+
+<tr>
+	<td><pre>  bool empty() const  </pre></td>
+	<td>Returns true if the  Union or Intersection contains not a single sub-structure.</td>
+</tr>
+
+</tbody>
+</table>
+
+<h3>Difference</h3>
+
+<table border='1' width='100%'>
+<tbody>
+
+<tr>
+	<td><pre>  Difference (const std::string name__ = "", T _exponent = 2.)  </pre></td>
+	<td>Construct an empty with the default exponent to control the smoothing.</td>
+</tr>
+
+<tr>
+	<td><pre>  Difference (T _exponent, const std::string name__ = "")  </pre></td>
+	<td>Construct an empty Difference using the given <i>_exponent</i> to control the smoothing.</td>
+</tr>
+
+<tr>
+	<td><pre>  void addPositive(Structure&lt;T&gt; *structure)  </pre></td>
+	<td>Add a sub-structure that has a positive contribution to the generated field. 
+	Do <b>not</b> delete <i>structure</i> yourself!!</td>
+</tr>
+
+
+<tr>
+	<td><pre>  void addNegative(Structure&lt;T&gt; *structure)  </pre></td>
+	<td>Add a sub-structure whose generated field will be substracted from the "positive"
+	sub-structures. Do <b>not</b> delete <i>structure</i> yourself!!</td>
+</tr>
+
+<tr>
+	<td><pre>  void clear()  </pre></td>
+	<td>Remove all sub-structures.</td>
+</tr>
+
+<tr>
+	<td><pre>  bool empty() const  </pre></td>
+	<td>Returns true if the Difference contains not a single positive or negative sub-structure.</td>
+</tr>
+
+</tbody>
+</table>
+
+<h2>Conversions</h2>
+
+<p>
+The following functions sample the implicitly defined space to various formats that explicitly define
+a 3D volume.
+</p>
+
+<table border='1' width='100%'>
+<tbody>
+
+<tr>
+	<td><pre>  template &lt;typename T&gt;
+  bool convertToField(const Shape&lt;T&gt; &amp;shape, const T sampleSize,
+		      cvmlcpp::Matrix&lt;T, 3&gt; &amp;field)  </pre></td>
+	<td>The field generated by the given <i>shape</i> will be sampled with 
+	the given <i>sampleSize</i>, the results are stored in the 3D matrix 
+	<i>field</i>. The resulting matrix can consume a lot of memory.</td>
+</tr>
+
+<tr>
+	<td><pre>  template &lt;typename T, typename V&gt;
+  bool convertToOctree(const Shape&lt;T&gt; &amp;shape, const T sampleSize,
+		       cvmlcpp::DTree&lt;V, 3&gt; &amp;voxtree)  </pre></td>
+	<td>The field generated by the given <i>shape</i> will be sampled with 
+	the given <i>sampleSize</i>, a resulting description of the 3D volume
+	will be stored in the Octree <i>voxtree</i>.</td>
+</tr>
+
+<tr>
+	<td><pre>  template &lt;typename T&gt;
+  bool convertToGeometry(const Shape&lt;T&gt; &amp;shape, const T sampleSize,
+ 			 cvmlcpp::Geometry&lt;T&gt; &amp;geometry)  </pre></td>
+	<td>The field generated by the given <i>shape</i> will be sampled with 
+	the given <i>sampleSize</i>, a resulting description of the 3D volume
+	will be stored using a facet-based representation.</td>
+</tr>
+
+<tr>
+	<td><pre>  template &lt;typename T, typename V&gt;
+  bool convertToVoxels(const Shape&lt;T&gt; &amp;shape, const T sampleSize,
+		       cvmlcpp::Matrix&lt;V, 3&gt; &amp;voxels)  </pre></td>
+	<td>The field generated by the given <i>shape</i> will be sampled with 
+	the given <i>sampleSize</i>, and will be represented as <i>voxels</i>.
+	The resulting matrix can consume a lot of memory.</td>
+</tr>
+
+<tr>
+	<td><pre>  template &lt;typename T, typename V&gt;
+  bool convertToVoxels(const cvmlcpp::Matrix&lt;T, 3&gt; &amp;field,
+		       cvmlcpp::Matrix&lt;V, 3&gt; &amp;voxels)  </pre></td>
+	<td>Convert a generated <i>field</i> into <i>voxels</i>. Both
+	matrices are expected to be memory-consuming.</td>
+</tr>
+
+</tbody>
+</table>
+
+
+<h2>I / O</h2>
+
+<p>
+<b>Note:</b> All I/ O functions live in the namespace <i>shapes::io</i>.
+</p>
+
+<table border='1' width='100%'>
+<tbody>
+
+<tr>
+	<td><pre>  template &lt;typename T&gt;
+  bool importXML(const std::string fileName,
+  		 Shape&lt;T&gt; &amp;shape)  </pre></td>
+	<td>Read a <i>shape</i> from an XML-file named <i>fileName</i>.</td>
+</tr>
+
+<tr>
+	<td><pre>  template &lt;typename T&gt;
+  bool exportITK(const std::string fileName, 
+  		 const Shape&lt;T&gt; &amp;shape,
+		 const T sampleSize = 1)  </pre></td>
+	<td>Write a <i>shape</i> to a file named <i>fileName</i> in
+	ITK format. It contains raw field values in 3D.</td>
+</tr>
+
+<tr>
+	<td><pre>  template &lt;typename T&gt;
+  bool exportSTL(const std::string fileName,
+  		 const Shape&lt;T&gt; &amp;shape,
+		 const T sampleSize = 1)  </pre></td>
+	<td>Write a <i>shape</i> to a file named <i>fileName</i> in
+	STL format.</td>
+</tr>
+
+<tr>
+	<td><pre>  template &lt;typename T&gt;
+  bool exportVoxels(const std::string fileName,
+  		    const Shape&lt;T&gt; &amp;shape,
+		    const T sampleSize = 1)  </pre></td>
+	<td>Write a <i>shape</i> to a file named <i>fileName</i> in voxel
+	representation. The file can be read with CVMLCPP's matrix I/O
+	facilities.</td>
+</tr>
+
+<tr>
+	<td><pre>  template &lt;typename T&gt;
+  bool exportVoxels(const std::string fileName,
+  		    const cvmlcpp::Matrix&lt;T, 3&gt; &amp;field)  </pre></td>
+	<td>Convert the given <i>field</i> to voxels and writeout to
+	a file named <i>fileName</i> in voxel representation. The file can 
+	be read with CVMLCPP's matrix I/O facilities.</td>
+</tr>
+
+<tr>
+	<td><pre>  template &lt;typename T&gt;
+  bool exportOctree(const std::string fileName,
+  		    const Shape&lt;T&gt; &amp;shape,
+		    const T sampleSize = 1)  </pre></td>
+	<td>Write a <i>shape</i> to a file named <i>fileName</i> in voxel
+	representation. The file can be read with a stream into
+	a CVMLCPP DTree.</td>
+</tr>
+
+</tbody>
+</table>
+
+
+<!-- End Page -->
+
+</td>
+</tr>
+</tbody>
+</table>
+
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+</body>
+</html>

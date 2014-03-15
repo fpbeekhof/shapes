@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+
+<Shape>
+    <Sphere>
+    	<Name>Hello World</Name>
+        <Center>47 50 84</Center>
+        <Radius>16</Radius>
+    </Sphere>
+</Shape>

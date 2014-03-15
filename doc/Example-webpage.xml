@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+
+<Shape>
+	<Union>
+		<Exponent>2</Exponent>
+
+		<Tube>
+			<Name>Vessel</Name>
+			<Point>
+				<Center>-50 0 0</Center>
+				<Radius>4</Radius>
+			</Point>
+			<Point>
+				<Center>0 0 0</Center>
+				<Radius>4</Radius>
+			</Point>
+			<Point>
+				<Center>50 0 0</Center>
+				<Radius>4</Radius>
+			</Point>
+		</Tube>
+
+		<Sphere>
+			<Name>Aneurysm</Name>
+			<Center>0 10 0</Center>
+			<Radius>6</Radius>
+		</Sphere>
+	</Union>
+
+	<BoundingBox>
+		<MinCorner>-60 -5 -5</MinCorner>
+		<MaxCorner>60 20 5</MaxCorner>
+	</BoundingBox>
+
+</Shape>

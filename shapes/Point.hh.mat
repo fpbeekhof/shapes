@@ -1,0 +1,232 @@
+/***************************************************************************
+ *   Copyright (C) 2006 by F. P. Beekhof                                   *
+ *   fpbeekhof@gmail.com                                                   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with program; if not, write to the                              *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#include <cmath>
+#include <sstream>
+
+#include <boost/lexical_cast.hpp>
+
+namespace shapes
+{
+
+template <typename T>
+Point<T>::Point(const FPPoint &_center, const FPVector &_weight,
+		const FPVector _orientation[3], const T _R, const T _exponent) :
+	center(_center), R(_R), exponent(_exponent)
+{
+	for (unsigned i = 0; i < 3; ++i)
+	{
+		orientation[i] = _orientation[i];
+		orientation[i] /= cvmlcpp::modulus(orientation[i]);
+	}
+	weight = _weight * std::sqrt(T(3)) / cvmlcpp::modulus(_weight);
+}
+
+template <typename T>
+void Point<T>::set(const FPPoint &_center, const FPVector &_weight,
+		const FPVector _orientation[3], const T _R, const T _exponent)
+{
+	center	= _center;
+	weight  = _weight * std::sqrt(T(3)) / cvmlcpp::modulus(_weight);
+	R	= _R;
+	exponent= _exponent;
+	for (unsigned i = 0; i < 3; ++i)
+	{
+		orientation[i] = _orientation[i];
+		orientation[i] /= cvmlcpp::modulus(orientation[i]);
+	}
+}
+
+template <typename T>
+bool Point<T>::fromXml(TiXmlHandle &root)
+{
+	// Load Center
+	TiXmlElement * elem = root.FirstChildElement( "Center" ).ToElement();
+	if (!elem)
+	{
+		std::cout << "Point: parse error: Center must occur once."
+			<< std::endl;
+		return false;
+	}
+
+	std::stringstream scenter(elem->GetText());
+	scenter >> center.x();
+	scenter >> center.y();
+	scenter >> center.z();
+
+	// Load Weight
+	elem = root.FirstChildElement( "Weight" ).ToElement();
+	if (elem)
+	{
+		std::stringstream sweight(elem->GetText());
+		sweight >> weight.x();
+		sweight >> weight.y();
+		sweight >> weight.z();
+		weight *= std::sqrt(T(3)) / cvmlcpp::modulus(weight);
+	}
+
+	// Load Orientation
+	elem = root.FirstChildElement( "Orientation" ).ToElement();
+	if (elem)
+	{
+		TiXmlHandle axisHandle(elem);
+		TiXmlElement * axisElem =
+				axisHandle.FirstChildElement("Axis").ToElement();
+		for (unsigned i = 0; i < 3; ++i)
+		{
+			if (!axisElem)
+			{
+				std::cout << "Point: parse Orientation failure."
+					<< std::endl;
+				return false;
+			}
+
+			std::stringstream sorientation(axisElem->GetText());
+			sorientation >> orientation[i].x();
+			sorientation >> orientation[i].y();
+			sorientation >> orientation[i].z();
+			
+			orientation[i] /= cvmlcpp::modulus(orientation[i]);
+
+			axisElem = axisElem->NextSiblingElement("Axis");
+		}
+	}
+
+	// Load Radius
+	elem = root.FirstChildElement( "Radius" ).ToElement();
+	if (elem)
+		R = boost::lexical_cast<T>(elem->GetText());
+	if (!(R > T(0)))
+		return false;
+
+	// Load Exponent
+	elem = root.FirstChildElement( "Exponent" ).ToElement();
+	if (elem)
+		exponent = boost::lexical_cast<T>(elem->GetText());
+	if (!(exponent > T(0)))
+		return false;
+
+	return true;
+}
+
+template <typename T>
+TiXmlElement * const Point<T>::toXML() const
+{
+	using boost::lexical_cast;
+
+	TiXmlElement * const root = new TiXmlElement("Point");
+
+	std::string buf;
+	buf =   lexical_cast<std::string>(this->center.x())+" " +
+		lexical_cast<std::string>(this->center.y())+" " +
+		lexical_cast<std::string>(this->center.z());
+
+	TiXmlElement * const centerElem = new TiXmlElement("Center");
+	centerElem->LinkEndChild( new TiXmlText(buf.c_str()) );
+	root->LinkEndChild(centerElem);
+
+	buf =   lexical_cast<std::string>(this->weight.x())+" " +
+		lexical_cast<std::string>(this->weight.y())+" " +
+		lexical_cast<std::string>(this->weight.z());
+	TiXmlElement * const weightElem = new TiXmlElement("Weight");
+	weightElem->LinkEndChild( new TiXmlText(buf.c_str()) );
+	root->LinkEndChild(weightElem);
+
+	TiXmlElement * const orientationElem = new TiXmlElement("Orientation");
+	for (unsigned i = 0; i < 3; ++i)
+	{
+		buf =   lexical_cast<std::string>(this->orientation[i].x())+" " +
+			lexical_cast<std::string>(this->orientation[i].y())+" " +
+			lexical_cast<std::string>(this->orientation[i].z());
+		TiXmlElement * const axisElem = new TiXmlElement("Axis");
+		axisElem->LinkEndChild( new TiXmlText(buf.c_str()) );
+		orientationElem->LinkEndChild( axisElem );
+	}
+
+	buf = lexical_cast<std::string>(this->R);
+	TiXmlElement * const radiusElem = new TiXmlElement("Radius");
+	radiusElem->LinkEndChild( new TiXmlText(buf.c_str()) );
+	root->LinkEndChild(radiusElem);
+
+	buf = lexical_cast<std::string>(this->exponent);
+	TiXmlElement * const exponentElem = new TiXmlElement("Exponent");
+	exponentElem->LinkEndChild( new TiXmlText(buf.c_str()) );
+	root->LinkEndChild(exponentElem);
+
+	root->LinkEndChild(orientationElem);
+
+	return root;
+}
+
+template <typename T>
+void Point<T>::printIndented(unsigned indent) const
+{
+	for (unsigned i = 0; i < indent; ++i)
+		std::cout << "\t";
+	std::cout << "<Point>" << std::endl;
+
+	// Center
+	for (unsigned i = 0; i <= indent; ++i)
+		std::cout << "\t";
+	std::cout << "<Center>" << center.x() << " " << center.y() << " "
+		  << center.z() << "</Center>" << std::endl;
+
+	// Weight
+	for (unsigned i = 0; i <= indent; ++i)
+		std::cout << "\t";
+	std::cout << "<Weight>" << weight.x() << " " << weight.y() << " "
+		  << weight.z() << "</Weight>" << std::endl;
+
+	// Orientation
+	for (unsigned i = 0; i <= indent; ++i)
+		std::cout << "\t";
+	std::cout << "<Orientation>" << std::endl;
+
+	for (unsigned d = 0; d < 3; ++d)
+	{
+		for (unsigned i = 0; i <= indent + 1; ++i)
+			std::cout << "\t";
+
+		std::cout << "<Axis>" << orientation[d].x() << " "
+			<< orientation[d].y() << " "
+			<< orientation[d].z() << "</Axis>" << std::endl;
+	}
+
+	for (unsigned i = 0; i <= indent; ++i)
+		std::cout << "\t";
+	std::cout << "</Orientation>" << std::endl;
+
+	// Radius
+	for (unsigned i = 0; i <= indent; ++i)
+		std::cout << "\t";
+	std::cout << "<Radius>" << R << "</Radius>" << std::endl;
+
+	// Exponent
+	for (unsigned i = 0; i <= indent; ++i)
+		std::cout << "\t";
+	std::cout << "<Exponent>" << exponent << "</Exponent>" << std::endl;
+
+	for (unsigned i = 0; i < indent; ++i)
+		std::cout << "\t";
+	std::cout << "</Point>" << std::endl;
+}
+
+} // end namespace
+

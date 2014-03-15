@@ -1,0 +1,93 @@
+/***************************************************************************
+ *   Copyright (C) 2006-2009 by F. P. Beekhof                              *
+ *   fpbeekhof@gmail.com                                                   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with program; if not, write to the                              *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef SHAPES_POINT_H
+#define SHAPES_POINT_H 1
+
+#include <shapes/tinyxml.h>
+#include <shapes/EuclidTypes.h>
+
+namespace shapes
+{
+
+template <typename T>
+class Point
+{
+	public:
+		typedef typename EuclidTypes<T>::FPPoint  FPPoint;
+		typedef typename EuclidTypes<T>::FPVector FPVector;
+
+		Point() : center(0.0), weight(1.0), R(0.0),
+				exponent(1.0)
+		{
+			// Three unit vectors
+			for (unsigned i = 0; i < 3; ++i)
+			{
+				orientation[i]    = 0.0;
+				orientation[i][i] = 1.0;
+			}
+		}
+
+		Point(const FPPoint &_center,
+			const FPVector &_weight,
+			const FPVector _orientation[3],
+			const T _R, const T _exponent = 1.0);
+
+		void set(const FPPoint &_center, 
+			 const FPVector &_weight,
+			 const FPVector _orientation[3],
+			 const T _R, const T _exponent = 1.0);
+
+		FPVector getCenter() const { return center; }
+
+		T getCenter(unsigned dim) const { return center[dim]; }
+
+		FPVector getWeight() const { return weight; }
+
+		T getWeight(unsigned dim) const { return weight[dim]; }
+
+		const FPVector &getOrientation(unsigned i) const
+		{ return orientation[i]; }
+
+		T getOrientation(unsigned i, unsigned dim) const
+		{ return orientation[i][dim]; }
+
+		T getRadius() const { return R; }
+
+		T getExponent() const { return exponent; }
+
+		bool fromXml(TiXmlHandle &root);
+
+		TiXmlElement * const toXML() const;
+
+		void printIndented(unsigned indent) const;
+
+	protected:
+		FPPoint  center;
+		FPVector weight;
+		FPVector orientation[3];
+		T	 R, exponent;
+};
+
+} // end namespace
+
+#include <shapes/Point.hh>
+
+#endif

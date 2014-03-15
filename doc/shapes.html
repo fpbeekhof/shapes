@@ -1,0 +1,282 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Shapes</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<link rel='stylesheet' href='stylesheet.css' type='text/css' />
+</head>
+
+<body>
+<div>
+
+<table border='0' width='100%'>
+<tbody>
+<tr>
+<td align='center'>
+<table border='0' width='1000'>
+<tbody>
+<tr>
+<td>
+
+<!-- Begin Page -->
+
+<h1>Shapes</h1>
+
+<h2>Introduction</h2>
+
+<p>The <b><i>Shapes</i></b> package is a combination of:</p>
+<ul>
+<li>a mathematical model for infinitely precise smooth 3D volumes;</li>
+<li>a standard to describe 3D volumes with XML files;</li>
+<li>software to convert volume-descriptions into common 3D datastructures.</li>
+</ul>
+<img src='vessel.png' alt='vessel' height='250' width='850'/>
+
+<p>
+Using geometries based on real medical data for fluid flows in the
+scientific community has proven to be difficult, because such data
+cannot be generated at arbitrary precision, cannot be freely shared for
+the purpose of cross-validation, may suffer from defects, and does not
+come in a format that is convenient for all simulation platforms.
+</p>
+
+<p>
+The answer to these problems is the <b>Shapes</b> package.
+In short, <b>Shapes</b> ....
+</p>
+<ul>
+	<li>offers an infinitely precise representation;</li>
+	<li>has no privacy/intellectual property constraints;</li>
+	<li>uses a platform-indendent representation;</li>
+	<li>naturally produces smooth shapes;</li>
+	<li>supports conversion to several formats for explicit volume representation.</li>
+</ul>
+
+<h2>Installation</h2>
+
+<h3>Step 1: Get the Source...</h3>
+
+... from <a href='http://tech.unige.ch/shapes/'>http://tech.unige.ch/shapes/</a>.
+
+<h3>Step 2: Requirements</h3>
+
+<p>
+You'll need the latest <b>Shapes</b> source, a recent compiler
+from the following <a href='http://tech.unige.ch/cvmlcpp/source/doc/Build.html'>list</a>,
+and the following tools and libraries:
+</p>
+<ul>
+	<li><a href='http://sourceforge.net/projects/tinyxml/'>TinyXML</a> (included)</li>
+	<li>GNU make</li>
+	<li><a href='http://www.scons.org/'>SCons</a></li>
+	<li><a href='http://www.boost.org/'>boost</a></li>
+	<li><a href='http://www.gzip.org/zlib'>zlib</a></li>
+	<li><a href='http://tech.unige.ch/cvmlcpp/'>CVMLCPP</a></li>
+	<li><a href='http://www.gnu.org/software/gsl/'>GNU Scientific Library</a> (optional)</li>
+</ul>
+
+<h3>Step 3: Compiling</h3>
+
+<p>
+The build system of <b>Shapes</b> is based on
+<a href='http://tech.unige.ch/cvmlcpp/source/doc/Build.html'>CVMLCPP's
+build system</a>, which offers a few standard configurations or
+alternatively allows you to control the build by defining environment
+variables. <b>Note:</b> CVMLCPP has to be installed, not merely unpacked.
+</p>
+
+<p>
+Before you compile, edit the Makefile. There is a short section to
+configure some variables, each of which are explained. It is possible to
+considerably speed up <b>Shapes</b> by allowing it to use the GNU
+Scientific Library. To enable this, edit the Makefile, and make sure
+the line concerning the <i>BACKEND</i> is <b>not</b> commented out.
+</p>
+
+<p>
+To compile and install, unpack the source, enter the directory
+<i>shapes</i>, and, if you like, edit the Makefile. Then, try:
+</p>
+<pre>
+$ make; sudo make install
+</pre>
+<p>If you'd rather like to use the Open64 compiler, compile in debug mode
+and <i>not</i> use GSL, try:
+</p>
+<pre>
+$ make CNF=open64 MODE=debug; sudo make CNF=open64 MODE=debug install
+</pre>
+
+<h2>Creating Shapes</h2>
+
+<!--
+<h3>Mathematical Model</h3>
+-->
+<!--
+<p>
+See the <a href='shapes.pdf'>technical-report-in-progess</a> for an
+in-depth explanation.
+</p>
+-->
+
+<p>
+There is a separate <a href='guide.html'>guide</a> available that
+explains how to create and define shapes without getting into the
+mathematics involved.
+</p>
+
+
+<h2>Command Line Tool Manual</h2>
+<p>
+The command line tool is called <i>shapes</i>. It converts shapes in
+their native implicit representation in XML-format into a number of
+different explicit formats. In order to make the conversion, the ``field''
+will be sampled at a regular interval, which is referred to as the
+<i>voxel-size</i>. The exact size of the shape in voxels cannot be
+determined until after sampling, so the size of the output cannot be
+specified.
+</p>
+
+<p>
+<b>Shapes</b> is not only a command-line program, it can also be used
+in the form of a library. Programmers can refer to the documentation of the
+<a href='api.html'>Application Programmers' Interface</a>.
+</p>
+
+<h3>Synopsis</h3>
+<pre>
+shapes &lt;-I|-S|-V|-T&gt; &lt;voxel-size&gt; &lt;file&gt; [output]
+</pre>
+
+<p>Supported options are clarified in the table below:</p>
+
+<table border='1' width='100%'>
+<tbody>
+
+<tr>
+	<td><pre>  -I|-S|-V|-T  </pre></td>
+	<td>Select the format of the output.<br />
+		<table border='0' width='100%'>
+		<tbody>
+		<tr>
+			<td><img src='1x1.png' width='50' height='1' alt='oops' /></td>
+			<td><pre>-I</pre></td>
+			<td><img src='1x1.png' width='30' height='1' alt='oops' /></td>
+			<td>Meta-Image format. Exports field strength rather than shape.</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td><pre>-S</pre></td>
+			<td>&nbsp;</td>
+			<td> <a href='http://en.wikipedia.org/wiki/STL_(file_format)'>Stereo-Lithography (STL)</a> </td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td><pre>-V</pre></td>
+			<td>&nbsp;</td>
+			<td>Voxels in CVMLCPP's <a href='http://tech.unige.ch/cvmlcpp/source/doc/VolumeIO.html'>voxel-format</a>.</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td><pre>-T</pre></td>
+			<td>&nbsp;</td>
+			<td> CVMLCPP's
+			<a href='http://tech.unige.ch/cvmlcpp/source/doc/DTree.html'>Octree XML-like</a>
+			format, compressed with zlib.
+			See the API documentation below for further instructions.</td>
+		</tr>
+
+		</tbody>
+		</table>
+	</td>
+</tr>
+
+<tr>
+	<td><pre>  voxel-size  </pre></td>
+	<td>The sample-interval or discretisation window. The smaller this
+	number, the more accurate the output will be. The output will
+	also be larger. If a value of 1 is used to convert the example
+	above with a tube stretching from -50 to 50 along the X-axis, then
+	the output will contain about 100 voxels in the X-dimension.</td>
+</tr>
+
+<tr>
+	<td><pre>  file  </pre></td>
+	<td>The input file, should be an XML-file containing a valid shape.</td>
+</tr>
+
+<tr>
+	<td><pre>  output  </pre></td>
+	<td><b>(Optional)</b> Name of the file where output will be written.
+		If not given, <i>shapes</i> will automatically select a
+		name based on the requested output format.</td>
+</tr>
+
+</tbody>
+</table>
+
+<p>
+<b>Note:</b> When the shape is converted to Meta-Image format, the
+"image" will actually be the 3D field rather than an image.
+<a href='http://www.paraview.org/'>Paraview</a> can be used to visualize
+the result. Load the resulting <i>.mhd</i> file in paraview, then select
+"contour" and set a single isosurface at a value of '1' to obtain the
+shape.
+</p>
+
+<p>
+<b>Note:</b> octrees are exported in a zlib-compressed XML-based format. To read
+them back, you can use <a href='http://www.boost.org/doc/libs/1_44_0/libs/iostreams/doc/classes/gzip.html'>Boost's IOstreams</a> as
+in this example:
+</p>
+<pre>
+#include &lt;string&gt;
+#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+
+#include &lt;boost/iostreams/filtering_stream.hpp&gt;
+#include &lt;boost/iostreams/filter/gzip.hpp&gt;
+
+#include &lt;cvmlcpp/volume/DTree&gt;
+
+cvmlcpp::DTree&lt;short int, 3&gt; readVoxTree(std::string fileName)
+{
+	cvmlcpp::DTree&lt;short int, 3&gt; voxtree;
+
+	std::ifstream f(fileName.c_str());
+	boost::iostreams::filtering_istream in;
+	in.push(boost::iostreams::gzip_decompressor());
+	in.push(f);
+
+	in &gt;&gt; voxtree;
+
+	// 'f' is closed automatically
+	return voxtree;
+}
+</pre>
+
+<h2>Credits</h2>
+
+<ul>
+<li>Fokko Beekhof: creator, lead programmer</li>
+<li>Guntram Berti: suggestions and code contributions for dampening, intersection and difference structures, and ITK export</li>
+<li>Jonas L&auml;tt: testing, suggestions on orientation and performance issues</li>
+</ul>
+
+<!-- End Page -->
+
+</td>
+</tr>
+</tbody>
+</table>
+
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+</body>
+</html>

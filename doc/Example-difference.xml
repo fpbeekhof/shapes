@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+
+<Shape>
+	<Difference>
+		<Exponent>2</Exponent>
+
+		<Positive>
+		        <Tube>
+		            <Point>
+		                <Center>-20 0 0</Center>
+		                <Radius>4</Radius>
+		            </Point>
+		            <Point>
+		                <Center>0 0 0</Center>
+		                <Radius>4</Radius>
+		            </Point>
+		            <Point>
+		                <Center>20 0 0</Center>
+		                <Radius>4</Radius>
+		            </Point>
+		        </Tube>
+		</Positive>
+		<Negative>
+		        <Sphere>
+				<Exponent>4</Exponent>
+		        	<Center>0 5 0</Center>
+		        	<Radius>3</Radius>
+		        </Sphere>
+		</Negative>
+	</Difference>
+
+	<BoundingBox>
+		<MinCorner>-30 -5 -5</MinCorner>
+		<MaxCorner>30 10 5</MaxCorner>
+	</BoundingBox>
+</Shape>

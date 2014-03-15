@@ -1,0 +1,426 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Shapes</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<link rel='stylesheet' href='stylesheet.css' type='text/css' />
+</head>
+
+<body>
+<div>
+
+<table border='0' width='100%'>
+<tbody>
+<tr>
+<td align='center'>
+<table border='0' width='1000'>
+<tbody>
+<tr>
+<td>
+
+<!-- Begin Page -->
+
+<h1>Understanding Shapes</h1>
+
+<h2>Overview</h2>
+
+<h3>Field Strength</h3>
+
+<p>
+The <b>Shapes</b> package is built around the intuitive concept of a
+"field" strength in 3D space, much like stars in space emit light or
+impose a gravitational force that grows weaker as the distance to the
+source of the field increases. By combining different sources, the field
+can be shaped and adjusted. The "shape" formed by a field is considered
+to be part of the space where the field strength is greater than or
+equal to one.
+</p>
+
+<h3>The Structure of a Shape</h3>
+
+<p>
+A <b>Shape</b> is built using structures. There are two kinds of
+structures: <i>basic structures</i> and <i>recursive structures</i>.
+You can think of a <b>Shape</b> as the root of a tree structure. 
+</p>
+
+<h3>Basic Structures</h3>
+
+<p>
+There are two basic structures: <i>Spheres</i> and <i>Tubes</i>. A
+<i>Sphere</i> behaves much like a light bulb: it represents a single 
+field-generating point in space. A <i>Tube</i> is like fluorescent tube:
+it  generates its field as from a string in space.
+</p>
+
+<p>
+Both <i>Spheres</i> and <i>Tubes</i> are based on the notion of 
+<i>Points</i>. A <i>Point</i> is not a structure in itself, but rather
+a common building block of <i>Spheres</i> and <i>Tubes</i>. A 
+<i>Sphere</i> has a single <i>Point</i> plus an exponent and a dampening
+field. These will be explained later.
+</p>
+
+<h3>Composition structures</h3>
+
+<h3>Hello World</h3>
+
+<p>
+There is no "hello world" in <b>Shapes</b>, but this basic example
+should give you an idea:
+<img src='vessel.png' alt='' height='250' width='850'/><br />
+It consists of a <i>Union</i> containing a <i>Sphere</i> and a <i>Tube</i>.
+</p>
+
+<!--
+<h2>Model</h2>
+-->
+
+
+
+<h2>Shape Representation in XML</h2>
+
+<p>
+There are a number of examples you can
+look at, for example this <a href='Example.xml'>union</a>, a slightly more complex 
+<a href='Example-union3.xml'>union</a> and a <a href='Example-diff.xml'>difference</a>.
+If you want to experiment, take the example below and change <i>Union</i> to <i>Intersection</i>.
+</p>
+
+<p>The following file was used to create the image on the top:</p>
+
+<pre>
+&lt;?xml version="1.0" ?&gt;
+
+&lt;Shape&gt;
+	&lt;Union&gt;
+		&lt;Exponent&gt;4&lt;/Exponent&gt;
+
+		&lt;Tube&gt;
+			&lt;Name&gt;Vessel&lt;/Name&gt;
+			&lt;Point&gt;
+				&lt;Center&gt;-50 0 0&lt;/Center&gt;
+				&lt;Radius&gt;4&lt;/Radius&gt;
+			&lt;/Point&gt;
+			&lt;Point&gt;
+				&lt;Center&gt;0 0 0&lt;/Center&gt;
+				&lt;Radius&gt;4&lt;/Radius&gt;
+			&lt;/Point&gt;
+			&lt;Point&gt;
+				&lt;Center&gt;50 0 0&lt;/Center&gt;
+				&lt;Radius&gt;4&lt;/Radius&gt;
+			&lt;/Point&gt;
+		&lt;/Tube&gt;
+
+		&lt;Sphere&gt;
+			&lt;Name&gt;Aneurysm&lt;/Name&gt;
+			&lt;Center&gt;0 10 0&lt;/Center&gt;
+			&lt;Radius&gt;6&lt;/Radius&gt;
+		&lt;/Sphere&gt;
+	&lt;/Union&gt;
+&lt;/Shape&gt;
+</pre>
+
+<h2>Shape</h2>
+
+<p>
+A Shape element can contain only one single structure, and optionally a 
+specification of a bounding box. Complex shapes can be created by using
+a cascade of compositional structures.
+</p>
+
+<p>
+Probably the most simple shape that can be created is below: it contains
+exactly one basic structure and an optional bounding box specification.
+</p>
+<pre>
+&lt;?xml version="1.0" ?&gt;
+
+&lt;Shape&gt;
+	&lt;Sphere&gt;
+		&lt;Name&gt;Hello World&lt;/Name&gt;
+		&lt;Center&gt;0 10 0&lt;/Center&gt;
+		&lt;Radius&gt;6&lt;/Radius&gt;
+	&lt;/Sphere&gt;
+
+	&lt;BoundingBox&gt;
+		&lt;MinCorner&gt;-7.5  2.5 -7.5&lt;/MinCorner&gt;
+		&lt;MaxCorner&gt; 7.5 17.5  7.5&lt;/MaxCorner&gt;
+	&lt;/BoundingBox&gt;
+
+&lt;/Shape&gt;
+</pre>
+
+<h3>Bounding Box</h3>
+
+<p>
+The bounding box is only a hint for conversion programs: the defined 
+shape determines the size the bounding box, not vice versa. If the 
+bounding box is too small to contain the shape, the box is simply 
+invalid and the volume occupied by the shape should not be in any way 
+affected. In short, one is not allowed to change the shape by 
+manipulation of the bounding box.
+
+If no bounding box is specified, the shapes library will try to estimate
+it, but this procedure is not 100% reliable, and in case the estimated 
+bounding box is too small, the output should be considered invalid.
+
+The bounding box can be specified by two points in 3-dimensional space,
+one with the lowest values in the X,Y and Z dimension, and one with the
+highest values.
+</p>
+
+<h2>Structures</h2>
+
+<p>
+There are two types of structures, basic structures and composing 
+structures. Each structure has certain specific parameters. All 
+structures have the ability to have a <i>dampening field</i> associated 
+with them. The structures have an infinite support in space, that is,
+the influence of each object converges to zero as the distance to the
+structure goes to infinity, but never reaches zero. If you wish to confine
+the influence of a structure to a finite range, a dampening field can be
+specified to smoothly let the generated field decay to zero.
+</p>
+
+<h3>Basic Structures: Sphere and Tube</h3>
+
+<p>
+There are two basic structures: <i>Sphere</i> and <i>Tube</i>. Both of
+these are based on the notion of point-like sources of field-generating
+power. A Sphere is an ellipsoid based on a single point, whereas a Tube
+is an interpolation over a series of points.
+</p>
+
+<p>A Point has the following parameters:</p>
+<table border='1' width='100%'>
+	<tr>
+		<td><pre>  Center  </pre></td>
+		<td>The <i>X</i>, <i>Y</i> and <i>Z</i> coordinate of the
+		center.</td>
+	</tr>
+	<tr>
+		<td><pre>  Weight  </pre></td>
+		<td>Relative weights of the axes, this allows the ellipsoid
+		to have a different width in different dimension. The weights
+		are always normalized, they only affect the relative size of
+		the sphere along different axes, but do not alter the size
+		otherwise.</td>
+	</tr>
+	<tr>
+		<td><pre>  Radius  </pre></td>
+		<td>The radius controls the size of the ellipsoid, if the
+		weights of all axes is equal, then the result will be a
+		sphere with the specified radius. Adjusting the weights to
+		unequal values will change the distances from the center to
+		the boundary of the ellipsoid depending on the relative weights.</td>
+	</tr>
+	<tr>
+		<td><pre>  Rotation Vector  </pre></td>
+		<td>The ellipsoid can be rotated around its center in order
+		to change its appearance in space. The rotation vector
+		determines around which vector the ellipsoid is rotated.</td>
+	</tr>
+	<tr>
+		<td><pre>  Angle  </pre></td>
+		<td>The angle determines how many degrees the ellipsoid is
+		rotated around the rotation vector.</td>
+	</tr>
+	<tr>
+		<td><pre>  Exponent  </pre></td>
+		<td>The exponent determines how fast the field generated by
+		the ellipsoid degrades as a function of the distance to the
+		center. If the exponent is one, the usual euclidean distance
+		is applied. If the exponent is two, then the field decays
+		quadratically faster. With this parameter, the smoothness of the
+		blend can be adjusted.</td>
+	</tr>
+</table>
+
+<p>
+A Sphere has, in addition to the parameters inherited from a point, a
+dampening field associated with it, and thus forms a complete structure.
+</p>
+
+<p>
+A Tube consists of a series of at least three defined points, and all
+parameters are interpolated with natural cubic splines between the Points.
+</p>
+
+<p>An example of a Sphere that with an orientation:</p>
+<pre>
+&lt;Shape&gt;
+        &lt;Sphere&gt;
+            &lt;Weight&gt;12 12 10&lt;/Weight&gt;
+            &lt;Center&gt;47 50 84&lt;/Center&gt;
+            &lt;Radius&gt;16&lt;/Radius&gt;
+            &lt;Orientation&gt;
+		&lt;RotationVector&gt;1 0 0&lt;/RotationVector&gt;
+		&lt;Angle&gt; 45 &lt;/Angle&gt;
+            &lt;/Orientation&gt;
+        &lt;/Sphere&gt;
+&lt;/Shape&gt;
+</pre>
+
+<h3>Composing Structures: Union, Intersection and Difference</h3>
+
+<p>
+The purpose of composing structures is to describe the volume in ways that can only be
+accomplished by more than one basic structure. These composing structures are recursive; 
+that is, a composing structure can contain both basic and/or composing structures. As a 
+result, the representation of a shape can be expressed as a 
+<a href='http://en.wikipedia.org/wiki/Tree_(data_structure)'>tree</a> where all leaf nodes 
+are basic structures and the non-leaf nodes are composing structures.
+</p>
+
+<p>
+The three composing structures have been modeled after classical operations on sets: unions,
+intersections and differences. Unions and intersections can be created by enclosing any number
+of structures between <i>Union</i> and <i>Intersection</i> tags, respectively. For differences,
+the situation is marginally more complex as you have to specify what structures should be removed 
+from other structures. To create a difference, two lists of structures are needed: within the
+<i>Difference</i> tags, create one list within <i>Positive</i> tags, and one between <i>Negative</i> tags. 
+</p>
+
+<h2>Examples</h2>
+
+<p>A simple example of a shape with a difference:</p>
+<pre>
+&lt;?xml version="1.0" ?&gt;
+
+&lt;Shape&gt;
+	&lt;Difference&gt;
+		&lt;Exponent&gt;2&lt;/Exponent&gt;
+		
+		&lt;Positive&gt;
+			&lt;Tube&gt;
+				&lt;Point&gt;
+					&lt;Center&gt;-20 0 0&lt;/Center&gt;
+					&lt;Radius&gt;4&lt;/Radius&gt;
+				&lt;/Point&gt;
+				&lt;Point&gt;
+					&lt;Center&gt;0 0 0&lt;/Center&gt;
+					&lt;Radius&gt;4&lt;/Radius&gt;
+				&lt;/Point&gt;
+				&lt;Point&gt;
+					&lt;Center&gt;20 0 0&lt;/Center&gt;
+					&lt;Radius&gt;4&lt;/Radius&gt;
+				&lt;/Point&gt;
+			&lt;/Tube&gt;
+		&lt;/Positive&gt;
+
+		&lt;Negative&gt;
+		        &lt;Sphere&gt;
+				&lt;Exponent&gt;4&lt;/Exponent&gt;
+				&lt;Center&gt;0 5 0&lt;/Center&gt;
+				&lt;Radius&gt;4&lt;/Radius&gt;
+		        &lt;/Sphere&gt;
+		&lt;/Negative&gt;
+	&lt;/Difference&gt;
+	
+	&lt;BoundingBox&gt;
+		&lt;MinCorner&gt;-30 -5 -5&lt;/MinCorner&gt;
+		&lt;MaxCorner&gt;30 10 5&lt;/MaxCorner&gt;
+	&lt;/BoundingBox&gt;
+&lt;/Shape&gt;
+</pre>
+
+<p>A complete shape used in the 
+<a href='http://www.lbmethod.org/palabos/documentation.userguide/boundary-conditions.html'>documentation</a> 
+of <a href='http://www.lbmethod.org/palabos/'>Palabos</a>:</p>
+
+<pre>
+&lt;?xml version="1.0" ?&gt;
+
+&lt;Shape&gt;
+    &lt;Union&gt;
+        &lt;Exponent&gt;2&lt;/Exponent&gt;
+        &lt;Tube&gt;
+            &lt;Point&gt;
+                &lt;Center&gt;50 50 0&lt;/Center&gt;
+                &lt;Radius&gt;8&lt;/Radius&gt;
+            &lt;/Point&gt;
+            &lt;Point&gt;
+                &lt;Center&gt;48 50 12&lt;/Center&gt;
+                &lt;Radius&gt;8&lt;/Radius&gt;
+            &lt;/Point&gt;
+            &lt;Point&gt;
+                &lt;Center&gt;38 50 40&lt;/Center&gt;
+                &lt;Radius&gt;8&lt;/Radius&gt;
+            &lt;/Point&gt;
+            &lt;Point&gt;
+                &lt;Center&gt;45 50 70&lt;/Center&gt;
+                &lt;Radius&gt;8&lt;/Radius&gt;
+            &lt;/Point&gt;
+        &lt;/Tube&gt;
+
+        &lt;Tube&gt;
+            &lt;Point&gt;
+                &lt;Center&gt;45 50 70&lt;/Center&gt;
+                &lt;Radius&gt;6&lt;/Radius&gt;
+            &lt;/Point&gt;
+            &lt;Point&gt;
+                &lt;Center&gt;70 60 72&lt;/Center&gt;
+                &lt;Radius&gt;6&lt;/Radius&gt;
+            &lt;/Point&gt;
+            &lt;Point&gt;
+                &lt;Center&gt;75 82 78&lt;/Center&gt;
+                &lt;Radius&gt;6&lt;/Radius&gt;
+            &lt;/Point&gt;
+            &lt;Point&gt;
+                &lt;Center&gt;55 92 90&lt;/Center&gt;
+                &lt;Radius&gt;6&lt;/Radius&gt;
+            &lt;/Point&gt;
+        &lt;/Tube&gt;
+
+        &lt;Tube&gt;
+            &lt;Point&gt;
+                &lt;Center&gt;45 50 70&lt;/Center&gt;
+                &lt;Radius&gt;6&lt;/Radius&gt;
+            &lt;/Point&gt;
+            &lt;Point&gt;
+                &lt;Center&gt;42 85 75&lt;/Center&gt;
+                &lt;Radius&gt;6&lt;/Radius&gt;
+            &lt;/Point&gt;
+            &lt;Point&gt;
+                &lt;Center&gt;48 100 65&lt;/Center&gt;
+                &lt;Radius&gt;6&lt;/Radius&gt;
+            &lt;/Point&gt;
+            &lt;Point&gt;
+                &lt;Center&gt;60 105 45&lt;/Center&gt;
+                &lt;Radius&gt;6&lt;/Radius&gt;
+            &lt;/Point&gt;
+        &lt;/Tube&gt;
+
+        &lt;Sphere&gt;
+            &lt;Weight&gt;12 12 10&lt;/Weight&gt;
+            &lt;Center&gt;47 50 84&lt;/Center&gt;
+            &lt;Radius&gt;16&lt;/Radius&gt;
+            &lt;Orientation&gt;
+		&lt;RotationVector&gt;1 0 0&lt;/RotationVector&gt;
+		&lt;Angle&gt; 45 &lt;/Angle&gt;
+            &lt;/Orientation&gt;
+        &lt;/Sphere&gt;
+
+    &lt;/Union&gt;
+&lt;/Shape&gt;
+
+</pre>
+
+<!-- End Page -->
+
+</td>
+</tr>
+</tbody>
+</table>
+
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+</body>
+</html>
